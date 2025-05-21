@@ -808,6 +808,17 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="mgaName">Major Graded Area (MGA):</label>
+                    <select id="mgaName">
+                        <option value="">-- Select Major Graded Area --</option>
+                        <option value="Executing the Mission">Executing the Mission</option>
+                        <option value="Leading People">Leading People</option>
+                        <option value="Managing Resources">Managing Resources</option>
+                        <option value="Improving the Unit">Improving the Unit</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label for="accomplishment">
                         Accomplishment: <span style="font-weight: normal;">Describe what you did with metrics in any format: bullet points, notes, sentences, or even stream of consciousness.</span>
                     </label>
@@ -1121,6 +1132,14 @@
                 }
             };
 
+            // MGA Descriptions for prompt generation
+            const mgaDescriptions = {
+                "Executing the Mission": "This area evaluates an individual’s ability to accomplish the assigned mission effectively and efficiently. It focuses on job performance, readiness, and how well the Airman or officer contributes to mission objectives. This includes tying individual actions to the unit’s Design Operational Capability (DOC) statement, Mission Essential Tasks (METs), or Mission Essential Task Lists (METLs), emphasizing readiness reporting and operational impact. For example, it assesses how an individual’s work supports the Air Force’s priorities, such as maintaining readiness under the Air Force Force Generation (AFFORGEN) model. Statements should quantify results and highlight mission-critical contributions.",
+                "Leading People": "This MPA assesses leadership effectiveness, including how well the Airman or officer fosters teamwork, motivates subordinates, and develops others. It evaluates skills in building cohesive teams, mentoring, and promoting professional growth while maintaining a positive command climate. This includes demonstrating leadership qualities such as accountability, communication, and inclusivity, as outlined in the ALQs. Examples might include leading a team to achieve a specific goal or implementing training programs that enhance team performance.",
+                "Managing Resources": "This area focuses on the stewardship of resources, including personnel, equipment, time, and budget. It evaluates how effectively an Airman or officer manages and allocates resources to support mission requirements. This includes optimizing resource use, ensuring accountability, and implementing cost-saving or efficiency-driven initiatives. Statements should highlight specific actions, such as managing a budget or improving resource readiness, with measurable outcomes.",
+                "Improving the Unit": "This MPA examines contributions to unit enhancement, innovation, and long-term improvement. It assesses how an Airman or officer identifies opportunities for growth, implements process improvements, or drives initiatives that strengthen the organization. This can include adopting new technologies, streamlining processes, or fostering a culture of continuous improvement. Statements should emphasize tangible impacts, such as increased efficiency or enhanced unit capabilities."
+            };
+
             // Copy to clipboard function
             document.getElementById('copyButton').addEventListener('click', function() {
                 const promptText = document.getElementById('outputPrompt').textContent;
@@ -1149,12 +1168,13 @@
                 }
 
                 const selectedMajcom = document.getElementById('majcomName').value;
+                const selectedMGA = document.getElementById('mgaName').value; // Get selected MGA
                 const accomplishment = document.getElementById('accomplishment').value || '';
                 const purpose = document.getElementById('purpose').value;
 
                 // Check required fields
-                if (!jobTitle || !selectedMajcom || !accomplishment) {
-                    showCustomModal('Missing Information', 'Please fill in all required fields: Job Title, MAJCOM, and Accomplishment.');
+                if (!jobTitle || !selectedMajcom || !selectedMGA || !accomplishment) { // Added selectedMGA to validation
+                    showCustomModal('Missing Information', 'Please fill in all required fields: Job Title, MAJCOM, Major Graded Area, and Accomplishment.');
                     return;
                 }
 
@@ -1175,7 +1195,7 @@
                     "Stewardship": "responsibly managing time, money, equipment, and personnel",
                     "Accountability": "taking ownership of actions and ensuring tasks are completed to expectation",
                     "Decision Making": "analyzing situations and making sound, timely choices",
-                    "Innovation": "seeking creative solutions and implements improvements to enhance processes"
+                    "Innovation": "seeking creative solutions and implementing improvements to enhance processes"
                 };
 
                 // Format ALQ section
@@ -1188,6 +1208,7 @@
                 }
 
                 const majcomMission = majcomData[selectedMajcom] ? majcomData[selectedMajcom].mission : "the overall Air Force mission";
+                const mgaDescription = mgaDescriptions[selectedMGA] ? mgaDescriptions[selectedMGA] : ""; // Get MGA description
 
                 // Build the prompt
                 const commonInstructions = `You are a USAF writing assistant specializing in crafting effective performance statements for military personnel.
@@ -1195,6 +1216,8 @@
 Job Title/AFSC: ${jobTitle}
 MAJCOM: ${selectedMajcom}
 MAJCOM Mission: ${majcomMission}
+Major Graded Area (MGA): ${selectedMGA}
+MGA Description: ${mgaDescription}
 
 Here's my accomplishment in rough format:
 ${accomplishment}
@@ -1203,7 +1226,7 @@ ${alqSection}
 I need your help converting this into proper USAF Performance Statement format following these guidelines:
 - Each statement should be a standalone sentence
 - Include both the action and at least one impact or result/outcome
-- IMPORTANT: Make sure the impact directly relates to ${selectedMajcom}'s mission: "${majcomMission}"
+- IMPORTANT: Make sure the impact directly relates to ${selectedMajcom}'s mission: "${majcomMission}" and specifically highlights contributions relevant to the "${selectedMGA}" Major Graded Area.
 - Use plain language and avoid uncommon acronyms
 - Emphasize leadership, mission impact, and quantifiable results
 - Be concise but comprehensive${selectedAlqs.length > 0 ? `
