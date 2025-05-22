@@ -82,11 +82,58 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .subtitle {
-            margin-top: 10px;
+        /* Updated subtitle/description styling */
+        .header-description {
+            margin-top: 15px;
             font-weight: 300;
-            font-size: 1.1rem;
+            font-size: 1rem;
             opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            padding: 0 15px;
+        }
+
+        .header-description h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+            color: var(--accent-color);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .header-description p {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .header-description ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .header-description ul li {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--accent-color);
+            margin-bottom: 8px;
+            padding: 10px 15px;
+            border-radius: var(--border-radius-md);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-description ul li strong {
+            color: var(--accent-color);
+            margin-right: 8px;
+        }
+
+        .header-description ul li:last-child {
+            margin-bottom: 0;
         }
 
         .card {
@@ -666,7 +713,6 @@
             <span class="favorite-icon">⭐</span> Add to Favorites
         </button>
         <h1>USAF AI Prompt Generator</h1>
-        <div class="subtitle">Create optimized prompts for AF Form 1206 and weekly reports based on official guidance</div>
     </header>
 
     <div style="background-color: #4CAF50; color: #000; text-align: center; padding: 10px; margin-bottom: 20px; border: 2px solid #2E7D32; border-left: 10px solid #2E7D32; border-radius: var(--border-radius-md);">
@@ -675,6 +721,26 @@
     </div>
 
     <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <span>How to Use This Tool</span>
+                <button id="howToUseToggle" class="toggle-section" title="Show/Hide Instructions">ⓘ Show Instructions</button>
+            </div>
+            <div id="howToUseBody" class="card-body hidden">
+                <h2>Purpose: Get 80% of your performance statements done in minutes!</h2>
+                <p>Our AI tool empowers every Airman to rapidly turn their accomplishments into strong, AFI-structured performance statements. This saves time for both Airmen and supervisors, leading to faster, higher-quality 1206s.</p>
+                <h2>Step-by-Step Guide:</h2>
+                <ul>
+                    <li><strong>Step 1:</strong> Input Your Accomplishments: Simply type in all your details and "word vomit" your achievements.</li>
+                    <li><strong>Step 2:</strong> Generate Prompt: Click the "generate prompt" button to create your AI-ready text.</li>
+                    <li><strong>Step 3:</strong> Paste & Generate: Copy the prompt and paste it into NIPRGPT or ASK SAGE to get 7 drafted performance statements.</li>
+                    <li><strong>Step 4:</strong> Select & Refine: Review the 7 AI-generated statements and select the best parts to provide to your supervisor.</li>
+                    <li><strong>Step 5:</strong> Supervisor Review: Your supervisor refines the chosen statements for final perfection.</li>
+                </ul>
+                <p style="text-align: center; margin-top: 20px;">That's it! Get high-quality, AFI-structured performance statements in minutes.</p>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 <span>Input Information</span>
@@ -1064,6 +1130,13 @@
             // Set up the bookmark button click handler
             document.getElementById('addToFavorites').addEventListener('click', showBookmarkInstructions);
 
+            // Toggle "How to Use This Tool" section
+            document.getElementById('howToUseToggle').addEventListener('click', function() {
+                const howToUseBody = document.getElementById('howToUseBody');
+                howToUseBody.classList.toggle('hidden');
+                this.textContent = howToUseBody.classList.contains('hidden') ? 'ⓘ Show Instructions' : '✕ Hide Instructions';
+            });
+
             // Toggle reference section
             document.getElementById('toggleReference').addEventListener('click', function() {
                 const referenceSection = document.getElementById('referenceSection');
@@ -1195,7 +1268,7 @@
                     "Stewardship": "responsibly managing time, money, equipment, and personnel",
                     "Accountability": "taking ownership of actions and ensuring tasks are completed to expectation",
                     "Decision Making": "analyzing situations and making sound, timely choices",
-                    "Innovation": "seeking creative solutions and implementing improvements to enhance processes"
+                    "Innovation": "seeking creative solutions and implements improvements to enhance processes"
                 };
 
                 // Format ALQ section
